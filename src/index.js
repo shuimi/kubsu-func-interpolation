@@ -14,19 +14,25 @@ document.addEventListener('DOMContentLoaded', function () {
     let leftBound = -10.;
     let rightBound = 10.;
 
-    const onInputChange = () => {
-        sourceFunction = parser.evaluate(sourceFunctionInput.value);
-        
-        let data = _.range(leftBound, rightBound + 1).map(value => sourceFunction(value));
+    const plot = () => {
+
+        let x = _.range(leftBound, rightBound + 1);
+        let y = x.map(value => sourceFunction(value));
 
         Plotly.newPlot('chart', {
-            data: [],
+            data: [ { x: x, y: y } ],
             layout: {
                 width: 600,
                 height: 400
             }
         });
+    }
 
+    const onInputChange = () => {
+        try {
+            sourceFunction = parser.evaluate(sourceFunctionInput.value);
+        } catch (e) {
+        }
     }
 
     const onLeftBoundChange = () => {
@@ -41,8 +47,10 @@ document.addEventListener('DOMContentLoaded', function () {
     leftBoundInput.addEventListener('input', onLeftBoundChange);
     rightBoundInput.addEventListener('input', onRightBoundChange);
 
-});
+    sourceFunctionInput.addEventListener('blur', plot);
+    leftBoundInput.addEventListener('blur', plot);
+    rightBoundInput.addEventListener('blur', plot);
 
-console.log();
+});
 
 // accuracy
